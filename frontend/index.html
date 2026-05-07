@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DELTA FORCE — Private Messenger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══ AUTH SCREEN ═══════════════════════════════════════════════════════ -->
+  <div id="auth-screen" class="auth-screen">
+    <div class="auth-bg">
+      <div class="auth-grid"></div>
+    </div>
+    <div class="auth-container">
+      <div class="auth-logo">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <rect width="36" height="36" rx="10" fill="var(--accent)"/>
+          <path d="M11 14a7 7 0 0 1 14 0v1h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1v-1zm2 1h10v-1a5 5 0 0 0-10 0v1zm-3 3v7h16v-7H10zm8 2a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z" fill="white"/>
+        </svg>
+        <span class="auth-logo-text">DELTA FORCE</span>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Sign In</button>
+        <button class="auth-tab" data-tab="register">Create Account</button>
+      </div>
+
+      <!-- Login Form -->
+      <div class="auth-form-wrap" id="login-form">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <div class="auth-error" id="login-error"></div>
+        <button class="btn-primary" id="login-btn">
+          <span>Sign In</span>
+        </button>
+      </div>
+
+      <!-- Register Form -->
+      <div class="auth-form-wrap hidden" id="register-form">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="reg-username" placeholder="your_handle" autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="reg-password" placeholder="min. 6 characters" autocomplete="new-password" />
+        </div>
+        <div class="auth-error" id="register-error"></div>
+        <button class="btn-primary" id="register-btn">
+          <span>Create Account</span>
+        </button>
+      </div>
+
+      <p class="auth-note">Messages auto-delete after 48 hours. End-to-end private.</p>
+    </div>
+  </div>
+
+  <!-- ═══ APP SCREEN ════════════════════════════════════════════════════════ -->
+  <div id="app-screen" class="app-screen hidden">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <svg width="22" height="22" viewBox="0 0 36 36" fill="none">
+            <rect width="36" height="36" rx="10" fill="var(--accent)"/>
+            <path d="M11 14a7 7 0 0 1 14 0v1h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1v-1zm2 1h10v-1a5 5 0 0 0-10 0v1zm-3 3v7h16v-7H10zm8 2a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z" fill="white"/>
+          </svg>
+          <span>DELTA FORCE</span>
+        </div>
+        <div class="sidebar-user">
+          <div class="user-avatar-sm" id="sidebar-avatar"></div>
+          <span id="sidebar-username"></span>
+        </div>
+        <button class="btn-icon" id="logout-btn" title="Sign out">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+
+      <div class="search-wrap">
+        <div class="search-box">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="user-search" placeholder="Search users…" autocomplete="off" />
+          <div class="search-clear hidden" id="search-clear">×</div>
+        </div>
+      </div>
+
+      <div class="sidebar-body">
+        <!-- Search results -->
+        <div id="search-results" class="user-list hidden"></div>
+        <!-- Recent conversations -->
+        <div id="recent-chats" class="user-list">
+          <div class="list-section-label">Recent</div>
+          <div id="recent-list"></div>
+          <div id="no-recent" class="empty-state">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <p>Search for a user to start chatting</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Chat Area -->
+    <main class="chat-area" id="chat-area">
+      <!-- Empty state -->
+      <div class="chat-empty" id="chat-empty">
+        <div class="chat-empty-inner">
+          <svg width="64" height="64" viewBox="0 0 36 36" fill="none">
+            <rect width="36" height="36" rx="12" fill="var(--surface-2)"/>
+            <path d="M11 14a7 7 0 0 1 14 0v1h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1v-1zm2 1h10v-1a5 5 0 0 0-10 0v1zm-3 3v7h16v-7H10zm8 2a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z" fill="var(--text-muted)"/>
+          </svg>
+          <h3>Your messages are private</h3>
+          <p>Select a conversation or search for a user to begin</p>
+        </div>
+      </div>
+
+      <!-- Active chat -->
+      <div class="chat-view hidden" id="chat-view">
+        <!-- Chat header -->
+        <header class="chat-header">
+          <button class="btn-icon back-btn" id="back-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
+          </button>
+          <div class="chat-header-info">
+            <div class="user-avatar-sm" id="chat-avatar"></div>
+            <div>
+              <div class="chat-header-name" id="chat-username"></div>
+              <div class="chat-header-status" id="chat-status"></div>
+            </div>
+          </div>
+          <div class="chat-header-ttl">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+            48h expiry
+          </div>
+        </header>
+
+        <!-- Messages -->
+        <div class="messages-wrap" id="messages-wrap">
+          <div class="messages-container" id="messages-container">
+            <div class="messages-loader hidden" id="messages-loader">Loading…</div>
+          </div>
+        </div>
+
+        <!-- Typing indicator -->
+        <div class="typing-indicator hidden" id="typing-indicator">
+          <span id="typing-username"></span> is typing
+          <span class="typing-dots"><span></span><span></span><span></span></span>
+        </div>
+
+        <!-- Input area -->
+        <div class="input-area">
+          <div class="input-wrap">
+            <label class="media-btn" for="media-input" title="Send image or video">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+              <input type="file" id="media-input" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" style="display:none" />
+            </label>
+            <textarea id="message-input" placeholder="Message…" rows="1" maxlength="5000"></textarea>
+            <button class="send-btn" id="send-btn" disabled>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+            </button>
+          </div>
+          <!-- Media preview -->
+          <div class="media-preview-wrap hidden" id="media-preview-wrap">
+            <div class="media-preview-inner">
+              <img id="media-preview-img" class="hidden" alt="preview" />
+              <video id="media-preview-vid" class="hidden" muted></video>
+              <button class="media-remove-btn" id="media-remove-btn">×</button>
+            </div>
+            <div class="media-upload-info">
+              <span id="media-filename"></span>
+              <span id="media-filesize"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Mobile overlay for sidebar -->
+    <div class="sidebar-overlay hidden" id="sidebar-overlay"></div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Media lightbox -->
+  <div class="lightbox hidden" id="lightbox">
+    <button class="lightbox-close" id="lightbox-close">×</button>
+    <div class="lightbox-content" id="lightbox-content"></div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
